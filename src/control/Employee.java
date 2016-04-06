@@ -192,6 +192,7 @@ public class Employee {
 				emp.setPosition(rs.getString("position"));
 				emp.setSalary(rs.getDouble("salary"));
 				emp.setBonus(rs.getDouble("bonus"));
+				employeeList.add(emp);
 				}
 			rs.close();
 			try {
@@ -234,9 +235,9 @@ public class Employee {
 	
 	public static void saveIncomeReportToFile(List<Employee> employeeList, String filePath) { 
 		try (PrintWriter outputWriter = new PrintWriter(new FileWriter(filePath))) {
-			outputWriter.println("| id  |      First Name        |       Last Name       | Age | Experience |      Position      |   Income   |");
+			outputWriter.println("|    id      |         First Name            |            Last Name          |    Age    |Experience |           Position            |      Income      |");
 			for (Employee emp : employeeList) {
-				outputWriter.println(emp);
+				outputWriter.print(emp);
 			}
 		}
 		catch (IOException e) {
@@ -262,19 +263,20 @@ public class Employee {
 		double sumSalary;
 		String position;
 		String result;
-		Formatter aFormat = new Formatter();
 		Connection con = Program.getConnection();
 		try (Statement stm = con.createStatement()) {
 			String sql = "select p.position, sum(e.salary) as sumSalary " +
 					     "from employee e left outer join positions p on e.position = p.id " +
 					     "group by p.position order by sumSalary ";
 			rs = stm.executeQuery(sql);
-			System.out.println("|        Position        |    Total salary sum     |");
+			System.out.println("|           Position            |      Total salary sum      |");
 			while (rs.next()) {
+				Formatter aFormat = new Formatter();
 				position = rs.getString("position");
 				sumSalary = rs.getDouble("sumSalary");
 				result = aFormat.format("|   %1$25s   |     %2$20.2f   |", position, sumSalary).toString();
 				System.out.println(result);
+				aFormat.close();
 				}
 			rs.close();
 			try {
@@ -292,9 +294,6 @@ public class Employee {
 			e1.getErrorCode();
 			e1.getMessage();
 			e1.getCause();
-		}
-		finally {
-			aFormat.close();
 		}
 	}
 	
