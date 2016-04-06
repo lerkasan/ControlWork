@@ -51,7 +51,10 @@ public class Employee {
 		if (birthday.isAfter(now) || hiredDate.isAfter(now)) {
 			throw new IllegalArgumentException("Given birthday or hiredDate argument is in the future.");
 		}		
-		if (birthday.isBefore(hiredDate) || birthday.isEqual(hiredDate)) {
+		if (birthday.until(hiredDate, ChronoUnit.YEARS) < 16) {
+			throw new IllegalArgumentException("Employee can't be yonger than 16 years old.");
+		}
+		if (birthday.isBefore(hiredDate)) {
 			this.birthday = birthday;
 			this.hiredDate = hiredDate;
 		} else {
@@ -114,9 +117,12 @@ public class Employee {
 		if (birthday.isAfter(now)) {
 			throw new IllegalArgumentException("Given birthday argument is in the future.");
 		}
+		if (birthday.until(hiredDate, ChronoUnit.YEARS) < 16) {
+			throw new IllegalArgumentException("Employee can't be yonger than 16 years old.");
+		}
 		if (hiredDate == null) {
 			this.birthday = birthday;
-		} else if ((birthday.isBefore(hiredDate)) || (birthday.isEqual(hiredDate))) {
+		} else if (birthday.isBefore(hiredDate)) {
 				this.birthday = birthday;
 		} else {
 			throw new IllegalArgumentException("Birth date should be before Hired date.");
@@ -143,9 +149,12 @@ public class Employee {
 		if (hiredDate.isAfter(now)) {
 			throw new IllegalArgumentException("Given hiredDate argument is in the future.");
 		}
+		if (birthday.until(hiredDate, ChronoUnit.YEARS) < 16) {
+			throw new IllegalArgumentException("Employee can't be yonger than 16 years old.");
+		}
 		if (birthday == null) {
 			this.hiredDate = hiredDate;
-		} else if ((birthday.isBefore(hiredDate)) || (birthday.isEqual(hiredDate))) {
+		} else if (birthday.isBefore(hiredDate)) {
 			this.hiredDate = hiredDate;
 		} else {
 			throw new IllegalArgumentException("hiredDate should be after Birth date.");
