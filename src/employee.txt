@@ -1,0 +1,36 @@
+drop table employee;
+create table employee
+(
+   id int not null generated always as identity,
+   firstName varchar(60) not null,
+   lastName varchar(60) not null,
+   gender char(1) not null,
+   birthday date not null,
+   experience smallint,
+   hiredDate date not null,
+   position int constraint position_fk references positions,
+   salary decimal(12,2) not null,
+   bonus decimal(5,2) default 0,
+   primary key (id)
+);
+
+create table positions 
+(
+id int not null generated always as identity,
+position varchar(60) not null,
+primary key (id)
+);
+
+insert into positions (position) values('General manager');
+insert into positions (position) values('Head of department');
+insert into positions (position) values('Accountant');
+insert into positions (position) values('Sales Manager');
+
+insert into employee(firstName, lastName, gender, birthday, experience, hiredDate, position, salary, bonus) values('Dan', 'Nelis', '0', '1982-06-08', 1, '2004-08-08', 1, 18000.00, 12.0);
+insert into employee(firstName, lastName, gender, birthday, experience, hiredDate, position, salary, bonus) values('Mark', 'Wolf', '0', '1973-07-01', 12, '2011-11-03', 2, 12000.00, 14.5);
+insert into employee(firstName, lastName, gender, birthday, experience, hiredDate, position, salary, bonus) values('Cris', 'Nelis', '1', '1988-05-09', 2, '2014-05-30', 3, 9000.00, 24.0);
+insert into employee(firstName, lastName, gender, birthday, experience, hiredDate, position, salary, bonus) values('Stein', 'Brown', '0', '1993-08-11', 0, '2015-04-21', 4, 5000.00, 0.0);
+insert into employee(firstName, lastName, gender, birthday, experience, hiredDate, position, salary, bonus) values('Piere', 'Bush', '0', '1977-10-02', 11, '2013-01-18', 4, 5000.00, 45.3);
+insert into employee(firstName, lastName, gender, birthday, experience, hiredDate, position, salary, bonus) values('Iren', 'Minten', '1', '1992-09-11', 0, '2013-12-11', 3, 3000.00, 0.0);
+insert into employee(firstName, lastName, gender, birthday, experience, hiredDate, position, salary, bonus) values('James', 'Smith', '0', '1991-12-24', 3, '2014-10-11', 4, 4200.00, 10.0);
+   
