@@ -16,7 +16,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Objects;
 
-enum Genders {M, F};
+enum Genders {MALE, FEMALE};
 
 public class Employee {
 	private int id;
@@ -32,11 +32,11 @@ public class Employee {
 	
 	public Employee() {
 		id = -1;
-		bonus = 0.0;
 	}
 
 	public Employee(String firstName, String lastName, Genders gender, LocalDate birthday, int experience,
 			LocalDate hiredDate, String position, double salary, double bonus) {
+		LocalDate now = LocalDate.now();
 		this.firstName = Objects.requireNonNull(firstName, "First name must not be null");
 		this.lastName = Objects.requireNonNull(lastName, "Last name must not be null");
 		this.gender = Objects.requireNonNull(gender, "Gender must not be null");
@@ -48,6 +48,9 @@ public class Employee {
 		if ((birthday == null) || (hiredDate == null)) {
 			throw new NullPointerException("Birthday and hiredDate dates can't be null.");
 		}
+		if (birthday.isAfter(now) || hiredDate.isAfter(now)) {
+			throw new IllegalArgumentException("Given birthday or hiredDate argument is in the future.");
+		}		
 		if (birthday.isBefore(hiredDate) || birthday.isEqual(hiredDate)) {
 			this.birthday = birthday;
 			this.hiredDate = hiredDate;
@@ -104,11 +107,17 @@ public class Employee {
 	}
 
 	public void setBirthday(LocalDate birthday) {
+		LocalDate now = LocalDate.now();
 		if (birthday == null) {
 			throw new NullPointerException("Birthday can't be null.");
 		}
-		if ( (birthday != null) || (hiredDate != null) || (birthday.isBefore(hiredDate)) || (birthday.isEqual(hiredDate))) {
+		if (birthday.isAfter(now)) {
+			throw new IllegalArgumentException("Given birthday argument is in the future.");
+		}
+		if (hiredDate == null) {
 			this.birthday = birthday;
+		} else if ((birthday.isBefore(hiredDate)) || (birthday.isEqual(hiredDate))) {
+				this.birthday = birthday;
 		} else {
 			throw new IllegalArgumentException("Birth date should be before Hired date.");
 		}
@@ -127,10 +136,16 @@ public class Employee {
 	}
 
 	public void setHiredDate(LocalDate hiredDate) {
+		LocalDate now = LocalDate.now();
 		if (hiredDate == null) {
 			throw new NullPointerException("hiredDate can't be null.");
 		}
-		if ((birthday != null) || (birthday.isBefore(hiredDate)) || (birthday.isEqual(hiredDate))) {
+		if (hiredDate.isAfter(now)) {
+			throw new IllegalArgumentException("Given hiredDate argument is in the future.");
+		}
+		if (birthday == null) {
+			this.hiredDate = hiredDate;
+		} else if ((birthday.isBefore(hiredDate)) || (birthday.isEqual(hiredDate))) {
 			this.hiredDate = hiredDate;
 		} else {
 			throw new IllegalArgumentException("hiredDate should be after Birth date.");
@@ -168,7 +183,7 @@ public class Employee {
 	public double getIncome() {
 		double procbonus = 1 + bonus / 100;
 		int temp = (int)Math.round(salary * procbonus * 100);
-		return (double)temp/100;
+		return (double)temp / 100;
 	}
 	
 	public static List<Employee> loadAverageMaleFromDB() {
@@ -295,12 +310,5 @@ public class Employee {
 			e1.getMessage();
 			e1.getCause();
 		}
-	}
-	
-	public static void main(String[] args) {
-		List<Employee> employeeList = Employee.loadAverageMaleFromDB();
-		Employee.sortAverageMaleByExperience(employeeList);
-		Employee.saveIncomeReportToFile(employeeList, "report.txt");
-		Employee.printSalarySumReport();
 	}
 }
