@@ -13,28 +13,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-enum Genders {MALE, FEMALE};
-
-public class Employee implements Comparable<Employee> {
+public class Employee2 implements Comparable<Employee2> {
 	private int id;
 	private String firstName;
 	private String lastName;
 	private Genders gender;
 	private LocalDate birthday;
+	private int age;
 	private int experience;
 	private LocalDate hiredDate;
 	private String position;
 	private double salary;
 	private double bonus;
+	private double income;
 	
-	public Employee() {
+	public Employee2() {
 		id = -1;
 	}
 
-	public Employee(String firstName, String lastName, Genders gender, LocalDate birthday, int experience,
+	public Employee2(String firstName, String lastName, Genders gender, LocalDate birthday, int experience,
 			LocalDate hiredDate, String position, double salary, double bonus) {
 		LocalDate now = LocalDate.now();
 		this.firstName = Objects.requireNonNull(firstName, "First name must not be null");
@@ -60,6 +64,7 @@ public class Employee implements Comparable<Employee> {
 		} else {
 			throw new IllegalArgumentException("Hired date can't be before Birth date.");
 		}
+		age = (int)this.getAge();
 		this.position = Objects.requireNonNull(position, "Position must not be null");
 		if (salary > 0) {
 			this.salary = salary;
@@ -71,6 +76,7 @@ public class Employee implements Comparable<Employee> {
 		} else {
 			throw new IllegalArgumentException("Bonus can't be negative number.");
 		}
+		income = this.getIncome();
 	}
 
 	public int getId() {
@@ -127,6 +133,11 @@ public class Employee implements Comparable<Employee> {
 		} else {
 			throw new IllegalArgumentException("Birth date should be before Hired date.");
 		}
+	}
+	
+	public int getAge() {
+		age = (int) birthday.until(LocalDate.now(), ChronoUnit.YEARS);
+		return age;
 	}
 
 	public int getExperience() {
@@ -185,38 +196,39 @@ public class Employee implements Comparable<Employee> {
 		this.bonus = bonus;
 	}
 	
-	public long getAgeInYears() {
-		return birthday.until(LocalDate.now(), ChronoUnit.YEARS);
-	}
-	
 	public double getIncome() {
 		double procbonus = 1 + bonus / 100;
 		int temp = (int)Math.round(salary * procbonus * 100);
-		return (double)temp / 100;
+		income = (double)temp / 100;
+		return income;
 	}
 	
-	public static List<Employee> loadAverageMaleFromDB() {
+	public static Map<Integer, Employee2> loadAverageMaleFromDB() {
 		ResultSet rs;
 		Connection con = Program.getConnection();
-		List<Employee> employeeList = new ArrayList<>();
+		Map<Integer, Employee2> employeeMap = new HashMap<>();
 		try (Statement stm = con.createStatement()) {
-			String sql = "select e.id, e.firstName, e.lastName, e.gender, e.birthDay, e.experience, e.hiredDate, p.position, e.salary, e.bonus " +
-					     "from employee e left outer join positions p on e.position = p.id " +
-					     "where (e.salary < 15000) and (e.gender = '0')" ;
+			String sql = "select e.id, e.firstName, e.lastName, e.gender, e.birthDay, {fn timestampdiff(SQL_TSI_YEAR, e.birthDay, CURRENT_DATE)} as age, " + 
+	                 "e.experience, e.hiredDate, p.position, e.salary, e.bonus, (e.salary + e.salary*e.bonus/100) as income " +
+				     "from employee e left outer join positions p on e.position = p.id " +
+				     "where (e.salary < 15000) and (e.gender = '0') " +
+				     "order by e.experience";
 			rs = stm.executeQuery(sql);
 			while (rs.next()) {
-				Employee emp = new Employee();
+				Employee2 emp = new Employee2();
 				emp.setId(rs.getInt("id"));
 				emp.setFirstName(rs.getString("firstName"));
 				emp.setLastName(rs.getString("lastName"));
 				emp.setGender(Genders.values()[rs.getInt("gender")]);
 				emp.setBirthday(rs.getDate("birthday").toLocalDate());
+				emp.age = rs.getInt("age");
 				emp.setExperience(rs.getInt("experience"));
 				emp.setHiredDate(rs.getDate("hiredDate").toLocalDate());
 				emp.setPosition(rs.getString("position"));
 				emp.setSalary(rs.getDouble("salary"));
 				emp.setBonus(rs.getDouble("bonus"));
-				employeeList.add(emp);
+				emp.income = rs.getDouble("income");
+				employeeMap.put(emp.getId(), emp);
 				}
 			rs.close();
 			try {
@@ -235,14 +247,7 @@ public class Employee implements Comparable<Employee> {
 			e1.getMessage();
 			e1.getCause();
 		}
-		return employeeList;
-	}
-	
-	public static List<Employee> sortAverageMaleByExperience(List<Employee> employeeList) {
-		if (employeeList != null) {
-			Collections.sort(employeeList, new EmployeeByExperienceComparator());
-		}
-		return employeeList;
+		return employeeMap;
 	}
 	
 	@Override
@@ -252,16 +257,16 @@ public class Employee implements Comparable<Employee> {
 		}
 		Formatter aFormat = new Formatter();
 		String result = aFormat.format("|   %1$6d   |   %2$25s   |   %3$25s   |   %4$5d   |   %5$5d   |   %6$25s   |   %7$12.2f   |%n", 
-				id, firstName, lastName, this.getAgeInYears(), experience, position, this.getIncome()).toString();
+				id, firstName, lastName, age, experience, position, income).toString();
 		aFormat.close();
 		return result;
 	}
 	
-	public static void saveIncomeReportToFile(List<Employee> employeeList, String filePath) { 
+	public static void saveIncomeReportToFile(Map<Integer, Employee2> employeeMap, String filePath) { 
 		try (PrintWriter outputWriter = new PrintWriter(new FileWriter(filePath))) {
 			outputWriter.println("|    id      |         First Name            |            Last Name          |    Age    |Experience |           Position            |      Income      |");
-			for (Employee emp : employeeList) {
-				outputWriter.print(emp);
+			for (Map.Entry<Integer, Employee2> entry : employeeMap.entrySet()) {
+				outputWriter.print(entry.getValue());
 			}
 		}
 		catch (IOException e) {
@@ -270,7 +275,7 @@ public class Employee implements Comparable<Employee> {
 	}
 	
 	@Override
-	public int compareTo(Employee emp) {
+	public int compareTo(Employee2 emp) {
 		if (this.getLastName().compareTo(emp.getLastName()) > 0) {
 			return 1;
 		} else if (this.getLastName().compareTo(emp.getLastName()) < 0) {
@@ -279,10 +284,10 @@ public class Employee implements Comparable<Employee> {
 		return 0;
 	}
 	
-	public static class EmployeeByExperienceComparator implements Comparator<Employee> {
+	public static class EmployeeByExperienceComparatorForList implements Comparator<Employee2> {
 		
 		@Override
-		public int compare(Employee emp1, Employee emp2) {
+		public int compare(Employee2 emp1, Employee2 emp2) {
 			if (emp1.getExperience() - emp2.getExperience() > 0) {
 				return 1;
 			} else if (emp1.getExperience() - emp2.getExperience() < 0) {
@@ -290,6 +295,39 @@ public class Employee implements Comparable<Employee> {
 			}
 			return 0;
 		}
+	}
+	
+	public static class EmployeeByExperienceComparatorForEntries implements Comparator<Map.Entry<Integer, Employee2>> {
+		@Override
+		public int compare(Map.Entry<Integer, Employee2> entry1, Map.Entry<Integer, Employee2> entry2) {
+			if (entry1.getValue().getExperience() - entry2.getValue().getExperience() > 0) {
+				return 1;
+			} else if (entry1.getValue().getExperience() - entry2.getValue().getExperience() < 0) {
+				return -1;
+			}
+			return 0;
+		}
+	}
+	
+	public static List<Employee2> sortListByExperience(List<Employee2> employeeList) {
+		if (employeeList != null) {
+			Collections.sort(employeeList, new EmployeeByExperienceComparatorForList());
+		}
+		return employeeList;
+	}
+	
+	public static Map<Integer, Employee2> sortMapByExperience(Map<Integer, Employee2> unsortMap) {
+		// Convert Map to List
+		List<Map.Entry<Integer, Employee2>> mapEntriesList = new ArrayList<>(unsortMap.entrySet());
+		// Sort list with comparator, to compare the Map values
+		Collections.sort(mapEntriesList, new EmployeeByExperienceComparatorForEntries());
+		// Convert sorted map back to a Map
+		Map<Integer, Employee2> sortedMap = new LinkedHashMap<>();
+		for (Iterator<Map.Entry<Integer, Employee2>> it = mapEntriesList.iterator(); it.hasNext();) {
+			Map.Entry<Integer, Employee2> entry = it.next();
+			sortedMap.put(entry.getKey(), entry.getValue());
+		}
+		return sortedMap;
 	}
 	
 	public static void printSalarySumReport() {

@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class Program {
@@ -36,7 +37,11 @@ public class Program {
 	public static void main(String[] args) {
 		List<Employee> employeeList = Employee.loadAverageMaleFromDB();
 		Employee.sortAverageMaleByExperience(employeeList);
-		Employee.saveIncomeReportToFile(employeeList, "results\report.txt");
+		Employee.saveIncomeReportToFile(employeeList, "report.txt");
 		Employee.printSalarySumReport();
+		
+		Map<Integer, Employee2> employeeMap = Employee2.loadAverageMaleFromDB();
+		Employee2.sortMapByExperience(employeeMap);
+		Employee2.saveIncomeReportToFile(employeeMap, "report2.txt");
 	}
 }
