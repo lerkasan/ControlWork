@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
 
 public class Employee2 implements Comparable<Employee2> {
 	private int id;
@@ -40,6 +41,7 @@ public class Employee2 implements Comparable<Employee2> {
 
 	public Employee2(String firstName, String lastName, Genders gender, LocalDate birthday, int experience,
 			LocalDate hiredDate, String position, double salary, double bonus) {
+		RuntimeException e;
 		LocalDate now = LocalDate.now();
 		this.firstName = Objects.requireNonNull(firstName, "First name must not be null");
 		this.lastName = Objects.requireNonNull(lastName, "Last name must not be null");
@@ -47,36 +49,48 @@ public class Employee2 implements Comparable<Employee2> {
 		if (experience >= 0) {
 			this.experience = experience;
 		} else {
-			throw new IllegalArgumentException("Experience can't be negative number.");
+			e = new IllegalArgumentException(Program.NEGATIVEEXPERIENCE);
+			Program.logger.log(Level.SEVERE, Program.NEGATIVEEXPERIENCE, e);
+			throw e;
 		}
 		if ((birthday == null) || (hiredDate == null)) {
-			throw new NullPointerException("Birthday and hiredDate dates can't be null.");
+			e = new NullPointerException(Program.NULLDATE);
+			Program.logger.log(Level.SEVERE, Program.NULLDATE, e);
+			throw e;
 		}
 		if (birthday.isAfter(now) || hiredDate.isAfter(now)) {
-			throw new IllegalArgumentException("Given birthday or hiredDate argument is in the future.");
+			e = new IllegalArgumentException(Program.FUTUREDATE);
+			Program.logger.log(Level.SEVERE, Program.FUTUREDATE, e);
+			throw e;
 		}		
 		if (birthday.until(hiredDate, ChronoUnit.YEARS) < 16) {
-			throw new IllegalArgumentException("Employee can't be yonger than 16 years old.");
+			e = new IllegalArgumentException(Program.TOOYOUNGEMPLOYEE);
+			Program.logger.log(Level.SEVERE, Program.TOOYOUNGEMPLOYEE, e);
+			throw e;
 		}
 		if (birthday.isBefore(hiredDate)) {
 			this.birthday = birthday;
 			this.hiredDate = hiredDate;
 		} else {
-			throw new IllegalArgumentException("Hired date can't be before Birth date.");
+			e = new IllegalArgumentException(Program.HIREDDATEBEFOREBITHDAY);
+			Program.logger.log(Level.SEVERE, Program.HIREDDATEBEFOREBITHDAY, e);
+			throw e;
 		}
-		age = (int)this.getAge();
 		this.position = Objects.requireNonNull(position, "Position must not be null");
 		if (salary > 0) {
 			this.salary = salary;
 		} else {
-			throw new IllegalArgumentException("Salary can't be negative number or zero.");
+			e = new IllegalArgumentException(Program.NEGATIVESALARY);
+			Program.logger.log(Level.SEVERE, Program.NEGATIVESALARY, e);
+			throw e;
 		}
 		if (bonus >= 0) {
 			this.bonus = bonus;
 		} else {
-			throw new IllegalArgumentException("Bonus can't be negative number.");
+			e = new IllegalArgumentException(Program.NEGATIVEBONUS);
+			Program.logger.log(Level.SEVERE, Program.NEGATIVEBONUS, e);
+			throw e;
 		}
-		income = this.getIncome();
 	}
 
 	public int getId() {
@@ -116,28 +130,33 @@ public class Employee2 implements Comparable<Employee2> {
 	}
 
 	public void setBirthday(LocalDate birthday) {
+		RuntimeException e;
 		LocalDate now = LocalDate.now();
 		if (birthday == null) {
-			throw new NullPointerException("Birthday can't be null.");
+			e = new NullPointerException(Program.NULLDATE);
+			Program.logger.log(Level.SEVERE, Program.NULLDATE, e);
+			throw e;
 		}
 		if (birthday.isAfter(now)) {
-			throw new IllegalArgumentException("Given birthday argument is in the future.");
+			e = new IllegalArgumentException(Program.FUTUREDATE);
+			Program.logger.log(Level.SEVERE, Program.FUTUREDATE, e);
+			throw e;
 		}
 		if ((hiredDate != null) && (birthday.until(hiredDate, ChronoUnit.YEARS) < 16)) {
-			throw new IllegalArgumentException("Employee can't be yonger than 16 years old.");
+			e = new IllegalArgumentException(Program.TOOYOUNGEMPLOYEE);
+			Program.logger.log(Level.SEVERE, Program.TOOYOUNGEMPLOYEE, e);
+			throw e;
 		}
 		if (hiredDate == null) {
 			this.birthday = birthday;
 		} else if (birthday.isBefore(hiredDate)) {
 				this.birthday = birthday;
 		} else {
-			throw new IllegalArgumentException("Birth date should be before Hired date.");
+			e = new IllegalArgumentException(Program.HIREDDATEBEFOREBITHDAY);
+			Program.logger.log(Level.SEVERE, Program.HIREDDATEBEFOREBITHDAY, e);
+			throw e;
 		}
-	}
-	
-	public int getAge() {
-		age = (int) birthday.until(LocalDate.now(), ChronoUnit.YEARS);
-		return age;
+		age = (int) birthday.until(LocalDate.now(), ChronoUnit.YEARS); 
 	}
 
 	public int getExperience() {
@@ -145,7 +164,13 @@ public class Employee2 implements Comparable<Employee2> {
 	}
 
 	public void setExperience(int experience) {
-		this.experience = experience;
+		if (experience >= 0) {
+			this.experience = experience;
+		} else {
+			RuntimeException e = new IllegalArgumentException(Program.NEGATIVEEXPERIENCE);
+			Program.logger.log(Level.SEVERE, Program.NEGATIVEEXPERIENCE, e);
+			throw e;
+		}
 	}
 
 	public LocalDate getHiredDate() {
@@ -153,22 +178,31 @@ public class Employee2 implements Comparable<Employee2> {
 	}
 
 	public void setHiredDate(LocalDate hiredDate) {
+		RuntimeException e;
 		LocalDate now = LocalDate.now();
 		if (hiredDate == null) {
-			throw new NullPointerException("hiredDate can't be null.");
+			e = new NullPointerException(Program.NULLDATE);
+			Program.logger.log(Level.SEVERE, Program.NULLDATE, e);
+			throw e;
 		}
 		if (hiredDate.isAfter(now)) {
-			throw new IllegalArgumentException("Given hiredDate argument is in the future.");
+			e = new IllegalArgumentException(Program.FUTUREDATE);
+			Program.logger.log(Level.SEVERE, Program.FUTUREDATE, e);
+			throw e;
 		}
 		if ((birthday != null) && (birthday.until(hiredDate, ChronoUnit.YEARS) < 16)) {
-			throw new IllegalArgumentException("Employee can't be yonger than 16 years old.");
+			e = new IllegalArgumentException(Program.TOOYOUNGEMPLOYEE);
+			Program.logger.log(Level.SEVERE, Program.TOOYOUNGEMPLOYEE, e);
+			throw e;
 		}
 		if (birthday == null) {
 			this.hiredDate = hiredDate;
 		} else if (birthday.isBefore(hiredDate)) {
 			this.hiredDate = hiredDate;
 		} else {
-			throw new IllegalArgumentException("hiredDate should be after Birth date.");
+			e = new IllegalArgumentException(Program.HIREDDATEBEFOREBITHDAY);
+			Program.logger.log(Level.SEVERE, Program.HIREDDATEBEFOREBITHDAY, e);
+			throw e;
 		}
 	}
 
@@ -185,7 +219,16 @@ public class Employee2 implements Comparable<Employee2> {
 	}
 
 	public void setSalary(double salary) {
-		this.salary = salary;
+		if (salary > 0) {
+			this.salary = salary;
+		} else {
+			RuntimeException e = new IllegalArgumentException(Program.NEGATIVESALARY);
+			Program.logger.log(Level.SEVERE, Program.NEGATIVESALARY, e);
+			throw e;
+		}
+		double procbonus = 1 + bonus / 100;
+		int temp = (int) Math.round(salary * procbonus * 100);
+		income = (double) temp / 100;
 	}
 
 	public double getBonus() {
@@ -193,13 +236,23 @@ public class Employee2 implements Comparable<Employee2> {
 	}
 
 	public void setBonus(double bonus) {
-		this.bonus = bonus;
+		if (bonus >= 0) {
+			this.bonus = bonus;
+		} else {
+			RuntimeException e = new IllegalArgumentException(Program.NEGATIVEBONUS);
+			Program.logger.log(Level.SEVERE, Program.NEGATIVEBONUS, e);
+			throw e;
+		}
+		double procbonus = 1 + bonus / 100;
+		int temp = (int) Math.round(salary * procbonus * 100);
+		income = (double) temp / 100;
+	}
+	
+	public long getAge() {
+		return age;
 	}
 	
 	public double getIncome() {
-		double procbonus = 1 + bonus / 100;
-		int temp = (int)Math.round(salary * procbonus * 100);
-		income = (double)temp / 100;
 		return income;
 	}
 	

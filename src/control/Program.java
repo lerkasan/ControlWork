@@ -9,8 +9,17 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class Program {
+	public static final String NEGATIVEEXPERIENCE = "Experience can't be negative number.";
+	public static final String NULLDATE = "Birthday and hiredDate dates can't be null";
+	public static final String FUTUREDATE = "Given birthday or hiredDate argument is in the future.";
+	public static final String TOOYOUNGEMPLOYEE = "Employee can't be yonger than 16 years old.";
+	public static final String HIREDDATEBEFOREBITHDAY = "Hired date can't be before Birth date.";
+	public static final String NEGATIVESALARY = "Salary can't be negative number or zero.";
+	public static final String NEGATIVEBONUS = "Bonus can't be negative number.";
+	protected static Logger logger = Logger.getAnonymousLogger();
 
 	private Program() {
 	}

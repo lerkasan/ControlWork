@@ -23,57 +23,62 @@ public class EmployeeConstructorTest {
 	}
 	
 	@Test(expected = NullPointerException.class)
-	public void FirstNameExceptionTest() {
+	public void firstNameExceptionTest() {
 		new Employee(null, "Smith", Genders.MALE, LocalDate.of(1995, 8, 16), 5, LocalDate.of(2015, 2, 12), "Manager", 7500.5, 15.3);
 	}
 
 	@Test(expected = NullPointerException.class)
-	public void LastNameExceptionTest() {
+	public void lastNameExceptionTest() {
 		new Employee("John", null, Genders.MALE, LocalDate.of(1995, 8, 16), 5, LocalDate.of(2015, 2, 12), "Manager", 7500.5, 15.3);
 	}
 	
 	@Test(expected = NullPointerException.class)
-	public void GenderExceptionTest() {
+	public void genderExceptionTest() {
 		new Employee("John", "Smith", null, LocalDate.of(1995, 8, 16), 5, LocalDate.of(2015, 2, 12), "Manager", 7500.5, 15.3);
 	}
 	
 	@Test(expected = NullPointerException.class)
-	public void BirthdayNullExceptionTest() {
-		new Employee("John", "Smith", Genders.MALE, null, 5, LocalDate.of(2015, 2, 12), "Manager", 7500.5, 15.3);
+	public void birthdayNullExceptionTest() {
+		new Employee("John", "Smith", Genders.MALE, null, 5, LocalDate.of(1995, 8, 16), "Manager", 7500.5, 15.3);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void BirthdayFutureExceptionTest() {
+	public void birthdayFutureExceptionTest() {
 		new Employee("John", "Smith", Genders.MALE, LocalDate.of(2025, 2, 12), 5, LocalDate.of(2015, 2, 12), "Manager", 7500.5, 15.3);
 	}
 	
 	@Test(expected = NullPointerException.class)
-	public void HiredDateNullExceptionTest() {
+	public void hiredDateNullExceptionTest() {
 		new Employee("John", "Smith", Genders.MALE, LocalDate.of(1995, 2, 12), 5, null, "Manager", 7500.5, 15.3);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void HiredDateFutureExceptionTest() {
+	public void hiredDateFutureExceptionTest() {
 		new Employee("John", "Smith", Genders.MALE, LocalDate.of(1995, 2, 12), 5, LocalDate.of(2025, 2, 12), "Manager", 7500.5, 15.3);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void HiredDateIsBeforeBirthdayExceptionTest() {
-		new Employee("John", "Smith", Genders.MALE, LocalDate.of(2015, 2, 12), 5, LocalDate.of(2001, 2, 12), "Manager", 7500.5, 15.3);
+	public void hiredDateIsBeforeBirthdayExceptionTest() {
+		new Employee("John", "Smith", Genders.MALE, LocalDate.of(2015, 2, 12), 5, LocalDate.of(1985, 2, 12), "Manager", 7500.5, 15.3);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void ExperienceNegativeExceptionTest() {
+	public void employeeYoungerTooYoungExceptionTest() {
+		new Employee("John", "Smith", Genders.MALE, LocalDate.of(2000, 2, 12), 5, LocalDate.of(2015, 3, 12), "Manager", 7500.5, 15.3);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void experienceNegativeExceptionTest() {
 		new Employee("John", "Smith", Genders.MALE, LocalDate.of(1995, 2, 12), -15, LocalDate.of(2025, 2, 12), "Manager", 7500.5, 15.3);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void SalaryNegativeExceptionTest() {
+	public void salaryNegativeExceptionTest() {
 		new Employee("John", "Smith", Genders.MALE, LocalDate.of(1995, 2, 12), 15, LocalDate.of(2025, 2, 12), "Manager", -7500.5, 15.3);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void BonusNegativeExceptionTest() {
+	public void bonusNegativeExceptionTest() {
 		new Employee("John", "Smith", Genders.MALE, LocalDate.of(1995, 2, 12), 15, LocalDate.of(2025, 2, 12), "Manager", 7500.5, -15.3);
 	}
 }
