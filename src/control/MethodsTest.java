@@ -1,9 +1,10 @@
 package control;
 
 import static org.junit.Assert.*;
+
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-
 import org.junit.Test;
 
 public class MethodsTest {
@@ -21,18 +22,18 @@ public class MethodsTest {
 	}
 	
 	@Test
-	public void loadFromDBTest() {
+	public void loadFromDBTest() throws SQLException {
 		List<Employee> employeeList = Employee.loadAverageMaleFromDB();
 		Employee emp = employeeList.get(0);
-		assertEquals(3, emp.getId());
+		assertEquals(2, emp.getId());
 	}
 	
 	@Test
-	public void sortByExperienceTest() {
+	public void sortByExperienceTest() throws SQLException {
 		List<Employee> employeeList = Employee.loadAverageMaleFromDB();
 		Employee.sortAverageMaleByExperience(employeeList);
 		Employee emp = employeeList.get(0);
-		assertEquals(5, emp.getId());
+		assertEquals(4, emp.getId());
 	}
 
 }

@@ -256,7 +256,7 @@ public class Employee2 implements Comparable<Employee2> {
 		return income;
 	}
 	
-	public static Map<Integer, Employee2> loadAverageMaleFromDB() {
+	public static Map<Integer, Employee2> loadAverageMaleFromDB() throws SQLException {
 		ResultSet rs;
 		Connection con = Program.getConnection();
 		Map<Integer, Employee2> employeeMap = new HashMap<>();
@@ -376,14 +376,17 @@ public class Employee2 implements Comparable<Employee2> {
 		Collections.sort(mapEntriesList, new EmployeeByExperienceComparatorForEntries());
 		// Convert sorted map back to a Map
 		Map<Integer, Employee2> sortedMap = new LinkedHashMap<>();
-		for (Iterator<Map.Entry<Integer, Employee2>> it = mapEntriesList.iterator(); it.hasNext();) {
-			Map.Entry<Integer, Employee2> entry = it.next();
+//		for (Iterator<Map.Entry<Integer, Employee2>> it = mapEntriesList.iterator(); it.hasNext();) {
+//			Map.Entry<Integer, Employee2> entry = it.next();
+//			sortedMap.put(entry.getKey(), entry.getValue());
+//		}
+		for(Map.Entry<Integer, Employee2> entry : mapEntriesList) {
 			sortedMap.put(entry.getKey(), entry.getValue());
 		}
 		return sortedMap;
 	}
 	
-	public static void printSalarySumReport() {
+	public static void printSalarySumReport() throws SQLException {
 		ResultSet rs;
 		double sumSalary;
 		String position;

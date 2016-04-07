@@ -20,34 +20,35 @@ public class Program {
 	public static final String NEGATIVESALARY = "Salary can't be negative number or zero.";
 	public static final String NEGATIVEBONUS = "Bonus can't be negative number.";
 	protected static Logger logger = Logger.getAnonymousLogger();
+	private static String connString;
+	
+	static {
+		Properties props = new Properties();
+		try (InputStreamReader in = new InputStreamReader(new FileInputStream("appProperties.txt"), "UTF-8")) {
+			props.load(in);
+			connString = props.getProperty("DBConnectionString");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static String getConnString() {
+		return connString;
+	}
 
 	private Program() {
 	}
 
-	public static Connection getConnection() {
-		Connection conn = null;
-		Properties props = new Properties();
-		try (InputStreamReader in = new InputStreamReader(new FileInputStream("appProperties.txt"), "UTF-8")) {
-			props.load(in);
-			String connString = props.getProperty("DBConnectionString");
-			conn = DriverManager.getConnection(connString);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			e.getSQLState();
-			e.getErrorCode();
-			e.getMessage();
-			e.getCause();
-		}
+	public static Connection getConnection() throws SQLException {
+		Connection conn = DriverManager.getConnection(getConnString());
 		return conn;
 	}
 
-	public static void main(String[] args) {
-		List<Employee> employeeList = Employee.loadAverageMaleFromDB();
+	public static void main(String[] args) throws SQLException {
+		/*List<Employee> employeeList = Employee.loadAverageMaleFromDB();
 		Employee.sortAverageMaleByExperience(employeeList);
 		Employee.saveIncomeReportToFile(employeeList, "report.txt");
-		Employee.printSalarySumReport();
+		Employee.printSalarySumReport();*/
 		
 		Map<Integer, Employee2> employeeMap = Employee2.loadAverageMaleFromDB();
 		Employee2.sortMapByExperience(employeeMap);

@@ -247,7 +247,7 @@ public class Employee implements Comparable<Employee> {
 		return (double)temp / 100;
 	}
 	
-	public static List<Employee> loadAverageMaleFromDB() {
+	public static List<Employee> loadAverageMaleFromDB() throws SQLException {
 		ResultSet rs;
 		Connection con = Program.getConnection();
 		List<Employee> employeeList = new ArrayList<>();
@@ -344,7 +344,7 @@ public class Employee implements Comparable<Employee> {
 		}
 	}
 	
-	public static void printSalarySumReport() {
+	public static void printSalarySumReport() throws SQLException {
 		ResultSet rs;
 		double sumSalary;
 		String position;

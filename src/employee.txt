@@ -1,4 +1,13 @@
-drop table employee;
+drop if exist table employee;
+drop if exist table positions;
+
+create table positions 
+(
+id int not null generated always as identity,
+position varchar(60) not null,
+primary key (id)
+);
+
 create table employee
 (
    id int not null generated always as identity,
@@ -12,13 +21,6 @@ create table employee
    salary decimal(12,2) not null,
    bonus decimal(5,2) default 0,
    primary key (id)
-);
-
-create table positions 
-(
-id int not null generated always as identity,
-position varchar(60) not null,
-primary key (id)
 );
 
 insert into positions (position) values('General manager');

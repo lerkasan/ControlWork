@@ -1,5 +1,5 @@
 |    id      |         First Name            |            Last Name          |    Age    |Experience |           Position            |      Income      |
-|        5   |                       Stein   |                       Brown   |      22   |       0   |               Sales Manager   |        5000,00   |
-|        8   |                       James   |                       Smith   |      24   |       3   |               Sales Manager   |        4620,00   |
-|        6   |                       Piere   |                        Bush   |      38   |      11   |               Sales Manager   |        7265,00   |
-|        3   |                        Mark   |                        Wolf   |      42   |      12   |          Head of department   |       13740,00   |
+|        4   |                       Stein   |                       Brown   |      22   |       0   |               Sales Manager   |        5000,00   |
+|        7   |                       James   |                       Smith   |      24   |       3   |               Sales Manager   |        4620,00   |
+|        5   |                       Piere   |                        Bush   |      38   |      11   |               Sales Manager   |        7265,00   |
+|        2   |                        Mark   |                        Wolf   |      42   |      12   |          Head of department   |       13740,00   |
