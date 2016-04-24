@@ -6,19 +6,18 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 public class Program {
-	public static final String NEGATIVEEXPERIENCE = "Experience can't be negative number.";
-	public static final String NULLDATE = "Birthday and hiredDate dates can't be null";
-	public static final String FUTUREDATE = "Given birthday or hiredDate argument is in the future.";
-	public static final String TOOYOUNGEMPLOYEE = "Employee can't be yonger than 16 years old.";
-	public static final String HIREDDATEBEFOREBITHDAY = "Hired date can't be before Birth date.";
-	public static final String NEGATIVESALARY = "Salary can't be negative number or zero.";
-	public static final String NEGATIVEBONUS = "Bonus can't be negative number.";
+	public static final String NEGATIVE_EXPERIENCE = "Experience can't be negative number.";
+	public static final String NULL_DATE = "Birthday and hiredDate dates can't be null";
+	public static final String FUTURE_DATE = "Given birthday or hiredDate argument is in the future.";
+	public static final String TOO_YOUNG_EMPLOYEE = "Employee can't be yonger than 16 years old.";
+	public static final String HIRED_DATE_BEFORE_BITHDAY = "Hired date can't be before Birth date.";
+	public static final String NEGATIVE_SALARY = "Salary can't be negative number or zero.";
+	public static final String NEGATIVE_BONUS = "Bonus can't be negative number.";
 	protected static Logger logger = Logger.getAnonymousLogger();
 	private static String connString;
 	
@@ -51,7 +50,7 @@ public class Program {
 		Employee.printSalarySumReport();*/
 		
 		Map<Integer, Employee2> employeeMap = Employee2.loadAverageMaleFromDB();
-		Employee2.sortMapByExperience(employeeMap);
-		Employee2.saveIncomeReportToFile(employeeMap, "report2.txt");
+		Map<Integer,Employee2> sortedResultMap = Employee2.sortMapByExperience(employeeMap);
+		Employee2.saveIncomeReportToFile(sortedResultMap, "report2.txt");
 	}
 }

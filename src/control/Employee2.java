@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Formatter;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,52 +42,34 @@ public class Employee2 implements Comparable<Employee2> {
 			LocalDate hiredDate, String position, double salary, double bonus) {
 		RuntimeException e;
 		LocalDate now = LocalDate.now();
-		this.firstName = Objects.requireNonNull(firstName, "First name must not be null");
-		this.lastName = Objects.requireNonNull(lastName, "Last name must not be null");
-		this.gender = Objects.requireNonNull(gender, "Gender must not be null");
-		if (experience >= 0) {
-			this.experience = experience;
-		} else {
-			e = new IllegalArgumentException(Program.NEGATIVEEXPERIENCE);
-			Program.logger.log(Level.SEVERE, Program.NEGATIVEEXPERIENCE, e);
-			throw e;
-		}
+		setFirstName(firstName);
+		setLastName(lastName);
+		setGender(gender);
+		setExperience(experience);
+		setPosition(position);
+		setSalary(salary);
+		setBonus(bonus);
 		if ((birthday == null) || (hiredDate == null)) {
-			e = new NullPointerException(Program.NULLDATE);
-			Program.logger.log(Level.SEVERE, Program.NULLDATE, e);
+			e = new NullPointerException(Program.NULL_DATE);
+			Program.logger.log(Level.SEVERE, Program.NULL_DATE, e);
 			throw e;
 		}
 		if (birthday.isAfter(now) || hiredDate.isAfter(now)) {
-			e = new IllegalArgumentException(Program.FUTUREDATE);
-			Program.logger.log(Level.SEVERE, Program.FUTUREDATE, e);
+			e = new IllegalArgumentException(Program.FUTURE_DATE);
+			Program.logger.log(Level.SEVERE, Program.FUTURE_DATE, e);
 			throw e;
 		}		
 		if (birthday.until(hiredDate, ChronoUnit.YEARS) < 16) {
-			e = new IllegalArgumentException(Program.TOOYOUNGEMPLOYEE);
-			Program.logger.log(Level.SEVERE, Program.TOOYOUNGEMPLOYEE, e);
+			e = new IllegalArgumentException(Program.TOO_YOUNG_EMPLOYEE);
+			Program.logger.log(Level.SEVERE, Program.TOO_YOUNG_EMPLOYEE, e);
 			throw e;
 		}
 		if (birthday.isBefore(hiredDate)) {
 			this.birthday = birthday;
 			this.hiredDate = hiredDate;
 		} else {
-			e = new IllegalArgumentException(Program.HIREDDATEBEFOREBITHDAY);
-			Program.logger.log(Level.SEVERE, Program.HIREDDATEBEFOREBITHDAY, e);
-			throw e;
-		}
-		this.position = Objects.requireNonNull(position, "Position must not be null");
-		if (salary > 0) {
-			this.salary = salary;
-		} else {
-			e = new IllegalArgumentException(Program.NEGATIVESALARY);
-			Program.logger.log(Level.SEVERE, Program.NEGATIVESALARY, e);
-			throw e;
-		}
-		if (bonus >= 0) {
-			this.bonus = bonus;
-		} else {
-			e = new IllegalArgumentException(Program.NEGATIVEBONUS);
-			Program.logger.log(Level.SEVERE, Program.NEGATIVEBONUS, e);
+			e = new IllegalArgumentException(Program.HIRED_DATE_BEFORE_BITHDAY);
+			Program.logger.log(Level.SEVERE, Program.HIRED_DATE_BEFORE_BITHDAY, e);
 			throw e;
 		}
 	}
@@ -133,18 +114,18 @@ public class Employee2 implements Comparable<Employee2> {
 		RuntimeException e;
 		LocalDate now = LocalDate.now();
 		if (birthday == null) {
-			e = new NullPointerException(Program.NULLDATE);
-			Program.logger.log(Level.SEVERE, Program.NULLDATE, e);
+			e = new NullPointerException(Program.NULL_DATE);
+			Program.logger.log(Level.SEVERE, Program.NULL_DATE, e);
 			throw e;
 		}
 		if (birthday.isAfter(now)) {
-			e = new IllegalArgumentException(Program.FUTUREDATE);
-			Program.logger.log(Level.SEVERE, Program.FUTUREDATE, e);
+			e = new IllegalArgumentException(Program.FUTURE_DATE);
+			Program.logger.log(Level.SEVERE, Program.FUTURE_DATE, e);
 			throw e;
 		}
 		if ((hiredDate != null) && (birthday.until(hiredDate, ChronoUnit.YEARS) < 16)) {
-			e = new IllegalArgumentException(Program.TOOYOUNGEMPLOYEE);
-			Program.logger.log(Level.SEVERE, Program.TOOYOUNGEMPLOYEE, e);
+			e = new IllegalArgumentException(Program.TOO_YOUNG_EMPLOYEE);
+			Program.logger.log(Level.SEVERE, Program.TOO_YOUNG_EMPLOYEE, e);
 			throw e;
 		}
 		if (hiredDate == null) {
@@ -152,8 +133,8 @@ public class Employee2 implements Comparable<Employee2> {
 		} else if (birthday.isBefore(hiredDate)) {
 				this.birthday = birthday;
 		} else {
-			e = new IllegalArgumentException(Program.HIREDDATEBEFOREBITHDAY);
-			Program.logger.log(Level.SEVERE, Program.HIREDDATEBEFOREBITHDAY, e);
+			e = new IllegalArgumentException(Program.HIRED_DATE_BEFORE_BITHDAY);
+			Program.logger.log(Level.SEVERE, Program.HIRED_DATE_BEFORE_BITHDAY, e);
 			throw e;
 		}
 		age = (int) birthday.until(LocalDate.now(), ChronoUnit.YEARS); 
@@ -167,8 +148,8 @@ public class Employee2 implements Comparable<Employee2> {
 		if (experience >= 0) {
 			this.experience = experience;
 		} else {
-			RuntimeException e = new IllegalArgumentException(Program.NEGATIVEEXPERIENCE);
-			Program.logger.log(Level.SEVERE, Program.NEGATIVEEXPERIENCE, e);
+			RuntimeException e = new IllegalArgumentException(Program.NEGATIVE_EXPERIENCE);
+			Program.logger.log(Level.SEVERE, Program.NEGATIVE_EXPERIENCE, e);
 			throw e;
 		}
 	}
@@ -181,18 +162,18 @@ public class Employee2 implements Comparable<Employee2> {
 		RuntimeException e;
 		LocalDate now = LocalDate.now();
 		if (hiredDate == null) {
-			e = new NullPointerException(Program.NULLDATE);
-			Program.logger.log(Level.SEVERE, Program.NULLDATE, e);
+			e = new NullPointerException(Program.NULL_DATE);
+			Program.logger.log(Level.SEVERE, Program.NULL_DATE, e);
 			throw e;
 		}
 		if (hiredDate.isAfter(now)) {
-			e = new IllegalArgumentException(Program.FUTUREDATE);
-			Program.logger.log(Level.SEVERE, Program.FUTUREDATE, e);
+			e = new IllegalArgumentException(Program.FUTURE_DATE);
+			Program.logger.log(Level.SEVERE, Program.FUTURE_DATE, e);
 			throw e;
 		}
 		if ((birthday != null) && (birthday.until(hiredDate, ChronoUnit.YEARS) < 16)) {
-			e = new IllegalArgumentException(Program.TOOYOUNGEMPLOYEE);
-			Program.logger.log(Level.SEVERE, Program.TOOYOUNGEMPLOYEE, e);
+			e = new IllegalArgumentException(Program.TOO_YOUNG_EMPLOYEE);
+			Program.logger.log(Level.SEVERE, Program.TOO_YOUNG_EMPLOYEE, e);
 			throw e;
 		}
 		if (birthday == null) {
@@ -200,8 +181,8 @@ public class Employee2 implements Comparable<Employee2> {
 		} else if (birthday.isBefore(hiredDate)) {
 			this.hiredDate = hiredDate;
 		} else {
-			e = new IllegalArgumentException(Program.HIREDDATEBEFOREBITHDAY);
-			Program.logger.log(Level.SEVERE, Program.HIREDDATEBEFOREBITHDAY, e);
+			e = new IllegalArgumentException(Program.HIRED_DATE_BEFORE_BITHDAY);
+			Program.logger.log(Level.SEVERE, Program.HIRED_DATE_BEFORE_BITHDAY, e);
 			throw e;
 		}
 	}
@@ -222,8 +203,8 @@ public class Employee2 implements Comparable<Employee2> {
 		if (salary > 0) {
 			this.salary = salary;
 		} else {
-			RuntimeException e = new IllegalArgumentException(Program.NEGATIVESALARY);
-			Program.logger.log(Level.SEVERE, Program.NEGATIVESALARY, e);
+			RuntimeException e = new IllegalArgumentException(Program.NEGATIVE_SALARY);
+			Program.logger.log(Level.SEVERE, Program.NEGATIVE_SALARY, e);
 			throw e;
 		}
 		double procbonus = 1 + bonus / 100;
@@ -239,8 +220,8 @@ public class Employee2 implements Comparable<Employee2> {
 		if (bonus >= 0) {
 			this.bonus = bonus;
 		} else {
-			RuntimeException e = new IllegalArgumentException(Program.NEGATIVEBONUS);
-			Program.logger.log(Level.SEVERE, Program.NEGATIVEBONUS, e);
+			RuntimeException e = new IllegalArgumentException(Program.NEGATIVE_BONUS);
+			Program.logger.log(Level.SEVERE, Program.NEGATIVE_BONUS, e);
 			throw e;
 		}
 		double procbonus = 1 + bonus / 100;
